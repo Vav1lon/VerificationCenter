@@ -36,6 +36,7 @@ public class SignServiceImpl implements SignService {
     @Value("${signature.alias}")
     private String signatureAlias;
 
+
     @Override
     public byte[] sign(CertificateInternalModel cert, byte[] content, byte[] sig) throws Exception {
 
@@ -57,13 +58,13 @@ public class SignServiceImpl implements SignService {
 
         Certificate[] certChain = keystore.getCertificateChain(signatureAlias);
 
-        final List<Certificate> certlist = new ArrayList<>();
+        final List<Certificate> certList = new ArrayList<>();
 
         for (int i = 0, length = certChain == null ? 0 : certChain.length; i < length; i++) {
-            certlist.add(certChain[i]);
+            certList.add(certChain[i]);
         }
 
-        Store certStore = new JcaCertStore(certlist);
+        Store certStore = new JcaCertStore(certList);
 
         Certificate cert = keystore.getCertificate(signatureAlias);
 

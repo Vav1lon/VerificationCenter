@@ -39,6 +39,9 @@ public class CertificateServiceImpl implements CertificateService {
     @Value("${signature.alias}")
     private String signatureAlias;
 
+    @Value("${local.filePath}")
+    private String filePath;
+
     @Override
     public Certificate create(CertificateRequestModel request, X500Name issuer) {
 
@@ -150,7 +153,7 @@ public class CertificateServiceImpl implements CertificateService {
             throw new RuntimeException(msg);
         }
         try {
-            keyStore.store(new FileOutputStream(request.getUserId() + "/" + serial + ".jks"), request.getPassword().toCharArray());
+            keyStore.store(new FileOutputStream(filePath + "/" + request.getUserId() + "/" + serial + ".jks"), request.getPassword().toCharArray());
         } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException e) {
             String msg = "Write KeyStore to HDD error";
             log.error(msg, e);

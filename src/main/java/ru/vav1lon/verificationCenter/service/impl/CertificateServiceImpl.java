@@ -9,13 +9,17 @@ import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import ru.vav1lon.verificationCenter.model.CertificateInternalModel;
 import ru.vav1lon.verificationCenter.model.CertificateRequestModel;
 import ru.vav1lon.verificationCenter.service.CertificateService;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
@@ -153,11 +157,36 @@ public class CertificateServiceImpl implements CertificateService {
             throw new RuntimeException(msg);
         }
         try {
-            keyStore.store(new FileOutputStream(filePath + "/" + request.getUserId() + "/" + serial + ".jks"), request.getPassword().toCharArray());
+            keyStore.store(new FileOutputStream(buildFullPath(filePath, request.getUserId().toString(), serial.toString())), request.getPassword().toCharArray());
         } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException e) {
             String msg = "Write KeyStore to HDD error";
             log.error(msg, e);
             throw new RuntimeException(msg);
         }
+    }
+
+    private String buildFullPath(String filePath, String userId, String fileName) {
+
+        if (StringUtils.isEmpty(filePath) || StringUtils.isEmpty(userId) || StringUtils.isEmpty(fileName)) {
+            String msg = "Incorrect params for build path";
+            log.error(msg);
+            throw new IllegalArgumentException(msg);
+        }
+
+        StringBuilder result = new StringBuilder(filePath);
+
+        if (!filePath.endsWith(File.separator)) {
+            result.append(File.separator);
+        }
+
+        String nameWithExt = fileName.concat(".jks");
+
+        result.append(userId).append(File.separator);
+
+        if (!Files.exists(Paths.get(result.toString()))) {
+            new File(result.toString()).mkdirs();
+        }
+
+        return result.append(nameWithExt).toString();
     }
 }

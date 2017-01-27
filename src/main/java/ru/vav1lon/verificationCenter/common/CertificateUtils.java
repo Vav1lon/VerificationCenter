@@ -8,9 +8,9 @@ import javax.naming.ldap.Rdn;
 import javax.security.auth.x500.X500Principal;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class CertificateUtils {
 
@@ -37,13 +37,12 @@ public class CertificateUtils {
     }
 
     public static boolean DNmatches(RDN[] rdn, X500Principal p2) throws InvalidNameException {
-        List<RDN> rdn1 = Arrays.asList(rdn);
         List<Rdn> rdn2 = new LdapName(p2.getName()).getRdns();
 
-        if (rdn1.size() != rdn2.size())
+        if (rdn.length != rdn2.size())
             return false;
 
-        return rdn1.containsAll(rdn2);
+        return Stream.of(rdn).allMatch(rdn2::contains);
     }
 
 }

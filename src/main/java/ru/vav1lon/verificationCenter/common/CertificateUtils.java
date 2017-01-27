@@ -1,4 +1,4 @@
-package sign.service.project.common;
+package ru.vav1lon.verificationCenter.common;
 
 import org.bouncycastle.asn1.x500.RDN;
 

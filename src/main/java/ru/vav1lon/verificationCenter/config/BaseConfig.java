@@ -1,4 +1,4 @@
-package sign.service.project.config;
+package ru.vav1lon.verificationCenter.config;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.context.annotation.Configuration;

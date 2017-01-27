@@ -1,4 +1,4 @@
-package sign.service.project.service.impl;
+package ru.vav1lon.verificationCenter.service.impl;
 
 import org.bouncycastle.asn1.x500.X500Name;
 import org.junit.After;
@@ -6,10 +6,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import sign.service.AbstractTest;
-import sign.service.project.common.CertificateUtils;
-import sign.service.project.model.CertificateRequestModel;
-import sign.service.project.service.CertificateService;
+import ru.vav1lon.verificationCenter.AbstractTest;
+import ru.vav1lon.verificationCenter.common.CertificateUtils;
+import ru.vav1lon.verificationCenter.model.CertificateRequestModel;
+import ru.vav1lon.verificationCenter.service.CertificateService;
 import sun.security.x509.X509CertImpl;
 
 public class CertificateServiceImplTest extends AbstractTest {

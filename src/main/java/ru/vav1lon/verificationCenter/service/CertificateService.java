@@ -1,8 +1,8 @@
-package sign.service.project.service;
+package ru.vav1lon.verificationCenter.service;
 
 import org.bouncycastle.asn1.x500.X500Name;
-import sign.service.project.model.CertificateInternalModel;
-import sign.service.project.model.CertificateRequestModel;
+import ru.vav1lon.verificationCenter.model.CertificateInternalModel;
+import ru.vav1lon.verificationCenter.model.CertificateRequestModel;
 
 import java.security.cert.Certificate;
 

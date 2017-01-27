@@ -1,4 +1,4 @@
-package sign.service.project.service.impl;
+package ru.vav1lon.verificationCenter.service.impl;
 
 import org.bouncycastle.cert.jcajce.JcaCertStore;
 import org.bouncycastle.cms.CMSProcessableByteArray;
@@ -12,8 +12,8 @@ import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 import org.bouncycastle.util.Store;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import sign.service.project.model.CertificateInternalModel;
-import sign.service.project.service.SignService;
+import ru.vav1lon.verificationCenter.model.CertificateInternalModel;
+import ru.vav1lon.verificationCenter.service.SignService;
 
 import java.io.FileInputStream;
 import java.io.InputStream;

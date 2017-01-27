@@ -1,4 +1,4 @@
-package sign.service.project.service.impl;
+package ru.vav1lon.verificationCenter.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.asn1.x500.X500Name;
@@ -9,9 +9,9 @@ import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import sign.service.project.model.CertificateInternalModel;
-import sign.service.project.model.CertificateRequestModel;
-import sign.service.project.service.CertificateService;
+import ru.vav1lon.verificationCenter.model.CertificateInternalModel;
+import ru.vav1lon.verificationCenter.model.CertificateRequestModel;
+import ru.vav1lon.verificationCenter.service.CertificateService;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

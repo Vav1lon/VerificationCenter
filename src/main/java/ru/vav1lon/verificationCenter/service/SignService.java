@@ -1,6 +1,6 @@
-package sign.service.project.service;
+package ru.vav1lon.verificationCenter.service;
 
-import sign.service.project.model.CertificateInternalModel;
+import ru.vav1lon.verificationCenter.model.CertificateInternalModel;
 
 public interface SignService {
 

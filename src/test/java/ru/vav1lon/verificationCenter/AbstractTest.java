@@ -1,4 +1,4 @@
-package sign.service;
+package ru.vav1lon.verificationCenter;
 
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

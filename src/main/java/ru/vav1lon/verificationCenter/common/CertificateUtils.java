@@ -2,14 +2,10 @@ package ru.vav1lon.verificationCenter.common;
 
 import org.bouncycastle.asn1.x500.RDN;
 
-import javax.naming.InvalidNameException;
-import javax.naming.ldap.LdapName;
-import javax.naming.ldap.Rdn;
-import javax.security.auth.x500.X500Principal;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
 import java.util.Base64;
-import java.util.List;
 import java.util.stream.Stream;
 
 public class CertificateUtils {
@@ -26,23 +22,9 @@ public class CertificateUtils {
         return new String(cert.getEncoded());
     }
 
-    public static boolean DNmatches(X500Principal p1, X500Principal p2) throws InvalidNameException {
-        List<Rdn> rdn1 = new LdapName(p1.getName()).getRdns();
-        List<Rdn> rdn2 = new LdapName(p2.getName()).getRdns();
 
-        if (rdn1.size() != rdn2.size())
-            return false;
-
-        return rdn1.containsAll(rdn2);
-    }
-
-    public static boolean DNmatches(RDN[] rdn, X500Principal p2) throws InvalidNameException {
-        List<Rdn> rdn2 = new LdapName(p2.getName()).getRdns();
-
-        if (rdn.length != rdn2.size())
-            return false;
-
-        return Stream.of(rdn).allMatch(rdn2::contains);
+    public static boolean DNmatches(RDN[] rdNs, RDN[] rdNs1) {
+        return Stream.of(rdNs).allMatch(rdn -> Arrays.asList(rdNs1).contains(rdn));
     }
 
 }

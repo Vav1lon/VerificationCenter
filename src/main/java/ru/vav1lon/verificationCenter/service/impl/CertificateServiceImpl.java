@@ -25,7 +25,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.spec.ECGenParameterSpec;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Random;
@@ -53,8 +53,8 @@ public class CertificateServiceImpl implements CertificateService {
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
         X500Name subject = new X500Name(request.getSubject());
         BigInteger serial = nextRandomBigInteger();
-        Date notBefore = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Date notAfter = Date.from(LocalDate.now().plusYears(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date notBefore = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+        Date notAfter = Date.from(LocalDateTime.now().plusYears(1).atZone(ZoneId.systemDefault()).toInstant());
 
         X509CertificateHolder certificateHolder = getX509CertificateHolder(issuer, keyPair, subject, serial, notBefore, notAfter);
         X509Certificate certificate = getX509Certificate(certificateHolder);

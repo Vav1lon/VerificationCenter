@@ -10,11 +10,15 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import ru.vav1lon.verificationCenter.AbstractTest;
+import ru.vav1lon.verificationCenter.common.CertificateUtils;
 import ru.vav1lon.verificationCenter.model.CertificateRequestModel;
 import ru.vav1lon.verificationCenter.service.CertificateService;
 import sun.security.x509.X509CertImpl;
 
 import java.io.File;
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class CertificateServiceImplTest extends AbstractTest {
 
@@ -43,20 +47,24 @@ public class CertificateServiceImplTest extends AbstractTest {
                 .userId(123L)
                 .build(), issuer);
 
+        Assert.assertNotNull(cer.getSerialNumberObject());
         Assert.assertEquals("ECGOST3410", cer.getPublicKey().getAlgorithm());
         Assert.assertEquals("X.509", cer.getType());
-        Assert.assertTrue(issuer, cer.getElements()));
-//        Assert.assertEquals(subject, cer.getSubjectDN());
+        Assert.assertEquals(3, cer.getVersion());
+        Assert.assertEquals("1.2.643.2.2.3", cer.getSigAlgOID());
+        Assert.assertEquals("1.2.643.2.2.3", cer.getSigAlgName());
+        Assert.assertEquals(1, Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()).compareTo(cer.getNotBefore()));
+        Assert.assertEquals(1, Date.from(LocalDateTime.now().plusYears(1).atZone(ZoneId.systemDefault()).toInstant()).compareTo(cer.getNotAfter()));
+        Assert.assertTrue(CertificateUtils.DNmatches(new X500Name(RFC4519Style.INSTANCE, cer.getSubjectDN().getName()).getRDNs(), new X500Name(RFC4519Style.INSTANCE, subject).getRDNs()));
+        Assert.assertTrue(CertificateUtils.DNmatches(new X500Name(RFC4519Style.INSTANCE, cer.getIssuerDN().getName()).getRDNs(), issuer.getRDNs()));
     }
 
     @Test
     public void getInformation() throws Exception {
-
     }
 
     @Test
     public void delete() throws Exception {
-
     }
 
 }

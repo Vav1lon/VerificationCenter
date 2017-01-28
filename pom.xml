@@ -3,9 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>sign.service</groupId>
-    <artifactId>uc</artifactId>
+    <groupId>ru.vav1lon</groupId>
+    <artifactId>verification.center</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+
     <packaging>jar</packaging>
 
     <name>VerificationCenter</name>
@@ -93,6 +94,7 @@
             <version>1.4.193</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -103,6 +105,5 @@
             </plugin>
         </plugins>
     </build>
-
 
 </project>

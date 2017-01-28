@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
@@ -34,11 +35,14 @@ import java.util.Random;
 @Service
 public class CertificateServiceImpl implements CertificateService {
 
-    private final static String signatureAlgorithm = "GOST3411WITHECGOST3410";
     private final static String KEY_STORE_TYPE = "JKS";
     private final static String ECGOST_3410_ALG = "ECGOST3410";
     private final static String EC_SPEC = "GostR3410-2001-CryptoPro-A";
     private final static String SECURITY_PROVIDER = "BC";
+
+    @Value("${signature.algo}")
+    private String signatureAlg;
+
 
     @Value("${signature.alias}")
     private String signatureAlias;
@@ -59,7 +63,7 @@ public class CertificateServiceImpl implements CertificateService {
         X509CertificateHolder certificateHolder = getX509CertificateHolder(issuer, keyPair, subject, serial, notBefore, notAfter);
         X509Certificate certificate = getX509Certificate(certificateHolder);
 
-        buildAndSaveInKeyStore(request, keyPair, serial, certificate);
+        buildAndSaveInKeyStore(request, keyPair, request.getStoreName(), certificate);
 
         return certificate;
     }
@@ -96,7 +100,7 @@ public class CertificateServiceImpl implements CertificateService {
 
         X509CertificateHolder certificateHolder;
         try {
-            certificateHolder = certificateBuilder.build(new JcaContentSignerBuilder(signatureAlgorithm).build(keyPair.getPrivate()));
+            certificateHolder = certificateBuilder.build(new JcaContentSignerBuilder(signatureAlg).build(keyPair.getPrivate()));
         } catch (OperatorCreationException e) {
             String msg = "X509v3CertificateBuilder create error";
             log.error(msg, e);
@@ -119,7 +123,7 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     private X509Certificate getX509Certificate(X509CertificateHolder certificateHolder) {
-        org.bouncycastle.cert.jcajce.JcaX509CertificateConverter certificateConverter = new org.bouncycastle.cert.jcajce.JcaX509CertificateConverter();
+        JcaX509CertificateConverter certificateConverter = new org.bouncycastle.cert.jcajce.JcaX509CertificateConverter();
         X509Certificate certificate;
         try {
             certificate = certificateConverter.getCertificate(certificateHolder);
@@ -132,7 +136,7 @@ public class CertificateServiceImpl implements CertificateService {
         return certificate;
     }
 
-    private void buildAndSaveInKeyStore(CertificateRequestModel request, KeyPair keyPair, BigInteger serial, X509Certificate certificate) {
+    private void buildAndSaveInKeyStore(CertificateRequestModel request, KeyPair keyPair, Long storeName, X509Certificate certificate) {
         KeyStore keyStore;
         try {
             keyStore = KeyStore.getInstance(KEY_STORE_TYPE);
@@ -149,7 +153,7 @@ public class CertificateServiceImpl implements CertificateService {
                             keyPair.getPrivate(),
                             new Certificate[]{certificate}
                     ),
-                    new KeyStore.PasswordProtection(request.getPassword().toCharArray())
+                    new KeyStore.PasswordProtection(request.getStorePassword().toCharArray())
             );
         } catch (KeyStoreException e) {
             String msg = "Write key to KeyStore error";
@@ -157,7 +161,7 @@ public class CertificateServiceImpl implements CertificateService {
             throw new RuntimeException(msg);
         }
         try {
-            keyStore.store(new FileOutputStream(buildFullPath(filePath, request.getUserId().toString(), serial.toString())), request.getPassword().toCharArray());
+            keyStore.store(new FileOutputStream(buildFullPath(filePath, request.getUserId().toString(), storeName.toString())), request.getStorePassword().toCharArray());
         } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException e) {
             String msg = "Write KeyStore to HDD error";
             log.error(msg, e);

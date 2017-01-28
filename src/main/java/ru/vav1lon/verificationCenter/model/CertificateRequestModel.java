@@ -14,6 +14,8 @@ public class CertificateRequestModel {
     @NotNull
     private Long userId;
     @NotNull
-    private String password;
+    private Long storeName;
+    @NotNull
+    private String storePassword;
 
 }

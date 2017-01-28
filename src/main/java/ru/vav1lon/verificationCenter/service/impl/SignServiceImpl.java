@@ -12,9 +12,10 @@ import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 import org.bouncycastle.util.Store;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.vav1lon.verificationCenter.model.CertificateInternalModel;
+import ru.vav1lon.verificationCenter.model.SignModel;
 import ru.vav1lon.verificationCenter.service.SignService;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.KeyStore;
@@ -36,21 +37,23 @@ public class SignServiceImpl implements SignService {
     @Value("${signature.alias}")
     private String signatureAlias;
 
+    @Value("${local.filePath}")
+    private String filePath;
 
     @Override
-    public byte[] sign(CertificateInternalModel cert, byte[] content, byte[] sig) throws Exception {
+    public byte[] sign(SignModel cert, byte[] content, byte[] sig) throws Exception {
 
-        KeyStore keyStore = loadKeyStore(cert.getKeyStoreName(), cert.getKeyStorePassword());
+        KeyStore keyStore = loadKeyStore(cert.getUserId(), cert.getCertificateId(), cert.getCertificatePassword());
 
-        CMSSignedDataGenerator signatureGenerator = setUpProvider(keyStore, cert.getKeyStorePassword());
+        CMSSignedDataGenerator signatureGenerator = setUpProvider(keyStore, cert.getCertificatePassword());
 
         return signPkcs7(content, signatureGenerator);
     }
 
-    private KeyStore loadKeyStore(String path, String passowrd) throws Exception {
+    private KeyStore loadKeyStore(Long userId, Long storeName, String password) throws Exception {
         KeyStore keystore = KeyStore.getInstance(KEY_STORE_TYPE);
-        InputStream is = new FileInputStream(path);
-        keystore.load(is, passowrd.toCharArray());
+        InputStream is = new FileInputStream(filePath + File.separator + userId + File.separator + storeName + ".jks");
+        keystore.load(is, password.toCharArray());
         return keystore;
     }
 
@@ -68,14 +71,17 @@ public class SignServiceImpl implements SignService {
 
         Certificate cert = keystore.getCertificate(signatureAlias);
 
+        PrivateKey key = (PrivateKey) keystore.getKey(signatureAlias, password.toCharArray());
 
-        ContentSigner signer = new JcaContentSignerBuilder(signatureAlg).setProvider(SECURITY_PROVIDER).
-                build((PrivateKey) (keystore.getKey(signatureAlias, password.toCharArray())));
+        ContentSigner signer = new JcaContentSignerBuilder(signatureAlg)
+                .setProvider(SECURITY_PROVIDER)
+                .build(key);
 
         CMSSignedDataGenerator generator = new CMSSignedDataGenerator();
 
-        generator.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(new JcaDigestCalculatorProviderBuilder().setProvider(SECURITY_PROVIDER).
-                build()).build(signer, (X509Certificate) cert));
+        generator.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(new JcaDigestCalculatorProviderBuilder()
+                .setProvider(SECURITY_PROVIDER)
+                .build()).build(signer, (X509Certificate) cert));
 
         generator.addCertificates(certStore);
 

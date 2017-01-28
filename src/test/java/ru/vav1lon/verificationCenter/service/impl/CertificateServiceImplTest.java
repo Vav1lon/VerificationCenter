@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import ru.vav1lon.verificationCenter.AbstractTest;
 import ru.vav1lon.verificationCenter.common.CertificateUtils;
 import ru.vav1lon.verificationCenter.model.CertificateRequestModel;
@@ -21,9 +20,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 public class CertificateServiceImplTest extends AbstractTest {
-
-    @Value("${local.filePath}")
-    private String filePath;
 
     @Autowired
     private CertificateService certificateService;
@@ -43,7 +39,8 @@ public class CertificateServiceImplTest extends AbstractTest {
         X500Name issuer = new X500Name(RFC4519Style.INSTANCE, "CN=MyCompany CA, O=MyCompany");
         X509CertImpl cer = (X509CertImpl) certificateService.create(CertificateRequestModel.builder()
                 .subject(subject)
-                .password("123")
+                .storePassword("123")
+                .storeName(234L)
                 .userId(123L)
                 .build(), issuer);
 

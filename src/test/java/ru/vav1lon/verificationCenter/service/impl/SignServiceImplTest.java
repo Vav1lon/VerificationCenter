@@ -1,7 +1,7 @@
 package ru.vav1lon.verificationCenter.service.impl;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.RFC4519Style;
 import org.junit.After;
@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import ru.vav1lon.verificationCenter.AbstractTest;
+import ru.vav1lon.verificationCenter.AbstractUnitTest;
 import ru.vav1lon.verificationCenter.model.CertificateRequestModel;
 import ru.vav1lon.verificationCenter.model.SignModel;
 import ru.vav1lon.verificationCenter.service.CertificateService;
@@ -18,7 +18,7 @@ import ru.vav1lon.verificationCenter.service.SignService;
 
 import java.io.File;
 
-public class SignServiceImplTest extends AbstractTest {
+public class SignServiceImplTest extends AbstractUnitTest {
 
     @Autowired
     private CertificateService certificateService;

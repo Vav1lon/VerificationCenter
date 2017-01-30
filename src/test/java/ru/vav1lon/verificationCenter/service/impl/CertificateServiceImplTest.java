@@ -1,6 +1,6 @@
 package ru.vav1lon.verificationCenter.service.impl;
 
-import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.apache.commons.io.FileUtils;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.RFC4519Style;
 import org.junit.After;
@@ -8,7 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.vav1lon.verificationCenter.AbstractTest;
+import ru.vav1lon.verificationCenter.AbstractUnitTest;
 import ru.vav1lon.verificationCenter.common.CertificateUtils;
 import ru.vav1lon.verificationCenter.model.CertificateRequestModel;
 import ru.vav1lon.verificationCenter.service.CertificateService;
@@ -19,7 +19,7 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-public class CertificateServiceImplTest extends AbstractTest {
+public class CertificateServiceImplTest extends AbstractUnitTest {
 
     @Autowired
     private CertificateService certificateService;
